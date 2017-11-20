@@ -18,8 +18,10 @@ public class UserService {
 
     private UserRepository ur;
 
-    public void registerUser(Object object) {
-        
+    public void registerUser(User user) {
+
+        ur.save(user);
+
     }
 
 }

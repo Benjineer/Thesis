@@ -3,12 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.thesis.controller;
+package com.thesis.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.thesis.entities.User;
+import com.thesis.reponses.Response;
 import com.thesis.services.UserService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +23,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *
@@ -31,6 +35,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    private Response response;
 
     @RequestMapping(method = GET)
     public List<Object> list() {
@@ -47,11 +53,16 @@ public class UserController {
         return null;
     }
 
-    @RequestMapping(method = POST)
-    public ResponseEntity<?> registerUser(@PathVariable String id, @RequestBody JsonNode input) {
-        
-        userService.registerUser(input);
-        return null;
+    @RequestMapping(method = POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Response> registerUser(@RequestBody User user) {
+
+        userService.registerUser(user);
+
+        response.setMessage("User created");
+        response.setBody(user);
+
+        return ResponseEntity.ok(response);
     }
 
     @RequestMapping(value = "/{id}", method = DELETE)
